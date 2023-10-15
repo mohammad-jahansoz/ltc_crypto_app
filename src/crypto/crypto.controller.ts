@@ -7,7 +7,7 @@ export class CryptoController {
 
   @Get('create-wallet')
   async createWallet() {
-    const walletData = await this.cryptoService.createWallet();
+    const walletData = await this.cryptoService.createLtcWallet();
     console.log(walletData);
   }
 
