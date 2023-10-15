@@ -3,17 +3,16 @@ import { Crypto } from './crypto.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as cw from 'crypto-wallets';
-import CryptoAccount from 'send-crypto';
-import * as crypto from 'crypto';
+import bitcoin from 'bitcoinjs-lib';
+import CryptoAccount, { newPrivateKey } from 'send-crypto';
 import {
   ECPairInterface,
   ECPairFactory,
   ECPairAPI,
   TinySecp256k1Interface,
+  networks,
 } from 'ecpair';
 import * as tinySecp256k1 from 'tiny-secp256k1';
-import { Network } from 'ecpair/src/networks';
-import * as bitcoinjsLib from 'bitcoinjs-lib';
 
 const tinySecp: TinySecp256k1Interface = tinySecp256k1;
 const ECPair: ECPairAPI = ECPairFactory(tinySecp);
@@ -23,29 +22,27 @@ export class CryptoService {
   constructor(@InjectModel(Crypto.name) private cryptoModel: Model<Crypto>) {}
 
   async createWallet() {
-    const ltcWallet = cw.generateWallet('LTC');
-    const createdLtcWallet = new this.cryptoModel(ltcWallet);
-    return createdLtcWallet.save();
-  }
-  async sendLtc({ privateKeyWIF, toAddress, amount }) {
-    let network: any = {};
-    console.log(network);
-
-    const keyPair: ECPairInterface = ECPair.fromWIF(privateKeyWIF);
-    const account = new CryptoAccount(keyPair.privateKey);
-    console.log(account);
-
-    /* Print address */
+    const privateKey = newPrivateKey();
+    console.log(`Save your key somewhere: ${privateKey}`);
+    const account = new CryptoAccount(privateKey, { network: 'mainnet' });
     console.log(await account.address('LTC'));
+  }
 
-    /* Print balance */
-    console.log(await account.getBalance('LTC'));
+  async sendLtc({ privateKeyWIF, toAddress, amount }) {
+    const account = new CryptoAccount(
+      '2ecf21d15c432600019afcea973d327c931d21773751caa14b37dfb74e264cdf',
+      { network: 'mainnet' },
+    );
+
+    console.log(await account.address('LTC'), 'ltc');
+    console.log(await account.address('BTC'), 'btc');
 
     const txHash = await account
-      .send(toAddress, amount, 'LTC')
+      .send('Lh1TPGCPGrqHDnhffNCsFvNtr1UpS7BEBr', 0.01, 'LTC', {
+        network: 'mainnet',
+      })
       .on('transactionHash', console.log)
       .on('confirmation', console.log);
-
     console.log(txHash);
   }
 }
