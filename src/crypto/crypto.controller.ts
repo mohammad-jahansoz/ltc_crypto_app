@@ -1,12 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { CryptoService } from './crypto.service';
 
 @Controller('crypto')
 export class CryptoController {
   constructor(private readonly cryptoService: CryptoService) {}
-  @Get('createWallet')
-  createWallet() {
-    const walletData = this.cryptoService.createWallet();
+
+  @Get('create-wallet')
+  async createWallet() {
+    const walletData = await this.cryptoService.createWallet();
     console.log(walletData);
+  }
+
+  @Post('send-ltc')
+  async sendLtc(@Body() req: any) {
+    const result = await this.cryptoService.sendLtc({
+      privateKeyWIF: req.privateKey,
+      amount: req.amount,
+      toAddress: req.toAddress,
+    });
+
+    console.log(result);
   }
 }
