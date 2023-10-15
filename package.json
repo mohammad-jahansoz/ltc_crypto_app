@@ -25,6 +25,7 @@
     "@nestjs/core": "^10.0.0",
     "@nestjs/mongoose": "^10.0.1",
     "@nestjs/platform-express": "^10.0.0",
+    "axios": "^1.5.1",
     "bitcoinjs-lib": "^6.1.5",
     "crypto-wallets": "^1.0.0",
     "ecpair": "^2.1.0",

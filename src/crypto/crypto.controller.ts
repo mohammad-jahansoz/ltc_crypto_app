@@ -14,7 +14,7 @@ export class CryptoController {
   @Post('send-ltc')
   async sendLtc(@Body() req: any) {
     const result = await this.cryptoService.sendLtc({
-      privateKeyWIF: req.privateKey,
+      privateKey: req.privateKey,
       amount: req.amount,
       toAddress: req.toAddress,
     });

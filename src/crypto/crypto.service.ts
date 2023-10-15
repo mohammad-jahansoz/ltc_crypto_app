@@ -2,13 +2,24 @@ import { Injectable } from '@nestjs/common';
 import { Crypto } from './crypto.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import bitcoin from 'bitcoinjs-lib';
+import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory, ECPairAPI, TinySecp256k1Interface } from 'ecpair';
-// const tinysecp: TinySecp256k1Interface = require('tiny-secp256k1');
-import tinysecp from 'tiny-secp256k1';
-const tinySecp256k1Interface: TinySecp256k1Interface = tinysecp;
+import CryptoAccount from 'send-crypto';
 
-const ECPair: ECPairAPI = ECPairFactory(tinySecp256k1Interface);
+const tinysecp: TinySecp256k1Interface = require('tiny-secp256k1');
+const ECPair: ECPairAPI = ECPairFactory(tinysecp);
+
+const LITECOIN = {
+  messagePrefix: '\x19Litecoin Signed Message:\n',
+  bech32: 'ltc',
+  bip32: {
+    public: 0x019da462,
+    private: 0x019d9cfe,
+  },
+  pubKeyHash: 0x30,
+  scriptHash: 0x32,
+  wif: 0xb0,
+};
 
 @Injectable()
 export class CryptoService {
@@ -16,8 +27,19 @@ export class CryptoService {
 
   async createLtcWallet() {
     const keyPair = ECPair.makeRandom();
-    console.log(keyPair);
+
+    const { address } = bitcoin.payments.p2pkh({
+      pubkey: keyPair.publicKey,
+      network: LITECOIN,
+    });
+    console.log(keyPair.privateKey, 'PRIVATE');
+    console.log(keyPair.publicKey, 'PUBLIC');
+    console.log(address);
   }
 
-  async sendLtc({ privateKeyWIF, toAddress, amount }) {}
+  async sendLtc({ privateKey, toAddress, amount }) {
+    ECPair.fromWIF(privateKey);
+    const account = new CryptoAccount(privateKey);
+    console.log(await account.address('LTC'));
+  }
 }
