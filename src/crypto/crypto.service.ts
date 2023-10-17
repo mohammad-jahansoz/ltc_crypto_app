@@ -6,9 +6,11 @@ import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory, ECPairAPI, TinySecp256k1Interface } from 'ecpair';
 import CryptoAccount from 'send-crypto';
 import { Network } from 'ecpair/src/networks';
+const ecc = require('@bitcoin-js/tiny-secp256k1-asmjs');
 
 const tinysecp: TinySecp256k1Interface = require('tiny-secp256k1');
-const ECPair: ECPairAPI = ECPairFactory(tinysecp);
+const ECPair = ECPairFactory(ecc);
+// const ECPair: ECPairAPI = ECPairFactory(tinysecp);
 
 const LITECOIN: Network = {
   messagePrefix: '\x19Litecoin Signed Message:\n',
@@ -33,14 +35,26 @@ export class CryptoService {
       network: LITECOIN,
     });
 
-    console.log(keyPair.privateKey, 'PRIVATE');
-    console.log(keyPair.publicKey, 'PUBLIC');
+    console.log(keyPair.privateKey.toString('hex'), 'private key');
     console.log(address, 'address');
   }
 
   async sendLtc({ privateKey, toAddress, amount }) {
-    ECPair.fromWIF(privateKey, LITECOIN);
-    const account = new CryptoAccount(privateKey, { network: 'ltc' });
-    console.log(await account.address('LTC'));
+    // try {
+    //   const test = ECPair.fromWIF(
+    //     '341c1e644074b9c9f7ad37828ced4f9224729a0133a39e7a3647bb4e6fc7c03b',
+    //     LITECOIN,
+    //   );
+    //   console.log(test);
+    // } catch (err) {
+    //   console.log(err);
+    // }
+    const account = new CryptoAccount(privateKey, { network: 'LTC' });
+    console.log(account);
+    // console.log(await account.address('LTC'));
+    // const txHash = await account
+    //   .send(toAddress, amount, 'LTC')
+    //   .on('transactionHash', console.log)
+    //   .on('confirmation', console.log);
   }
 }
