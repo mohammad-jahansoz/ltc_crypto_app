@@ -27,6 +27,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "axios": "^1.5.1",
     "bitcoinjs-lib": "^6.1.5",
+    "bitcore-lib-ltc": "^10.0.11",
     "crypto-wallets": "^1.0.0",
     "ecpair": "^2.1.0",
     "mongoose": "^7.6.2",

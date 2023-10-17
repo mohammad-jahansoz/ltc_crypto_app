@@ -20,3 +20,12 @@ LZcbexZK1wQh7Rup45XqpdnLLyeGrfstpG
 
 341c1e644074b9c9f7ad37828ced4f9224729a0133a39e7a3647bb4e6fc7c03b converteeeed
 LiPKcAxnwtnEDAHN7skNoLJefdnSZQHzoy address
+
+
+
+https://account.nownodes.io/profile/dashboard
+https://nownodes.io/nodes
+https://documenter.getpostman.com/view/13630829/TVmFkLwy#af1f765a-406f-4d1b-99c1-e62b11a52eb1
+
+https://www.npmjs.com/package/bitcore-lib-ltc
+https://github.com/litecore-archive/litecore-lib/blob/master/docs/examples.md
