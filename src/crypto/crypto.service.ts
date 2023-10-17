@@ -5,11 +5,12 @@ import { Model } from 'mongoose';
 import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory, ECPairAPI, TinySecp256k1Interface } from 'ecpair';
 import CryptoAccount from 'send-crypto';
+import { Network } from 'ecpair/src/networks';
 
 const tinysecp: TinySecp256k1Interface = require('tiny-secp256k1');
 const ECPair: ECPairAPI = ECPairFactory(tinysecp);
 
-const LITECOIN = {
+const LITECOIN: Network = {
   messagePrefix: '\x19Litecoin Signed Message:\n',
   bech32: 'ltc',
   bip32: {
@@ -26,20 +27,20 @@ export class CryptoService {
   constructor(@InjectModel(Crypto.name) private cryptoModel: Model<Crypto>) {}
 
   async createLtcWallet() {
-    const keyPair = ECPair.makeRandom();
-
+    const keyPair = ECPair.makeRandom({ network: LITECOIN });
     const { address } = bitcoin.payments.p2pkh({
       pubkey: keyPair.publicKey,
       network: LITECOIN,
     });
+
     console.log(keyPair.privateKey, 'PRIVATE');
     console.log(keyPair.publicKey, 'PUBLIC');
-    console.log(address);
+    console.log(address, 'address');
   }
 
   async sendLtc({ privateKey, toAddress, amount }) {
-    ECPair.fromWIF(privateKey);
-    const account = new CryptoAccount(privateKey);
+    ECPair.fromWIF(privateKey, LITECOIN);
+    const account = new CryptoAccount(privateKey, { network: 'ltc' });
     console.log(await account.address('LTC'));
   }
 }
