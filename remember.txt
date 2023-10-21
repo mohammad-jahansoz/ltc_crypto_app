@@ -35,3 +35,15 @@ https://github.com/litecore-archive/litecore-lib/blob/master/docs/examples.md
 
 Note also that an output can be used only once. That's why there's a concept of "change address" in the litecoin ecosystem: if an output of 10 BTC is available for me to spend, but I only need to transmit 1 BTC, I'll create a transaction with two outputs, one with 1 BTC that I want to spend, and the other with 9 BTC to a change address, so I can spend this 9 BTC with another private key that I own.
 from(utxo): add an input from an Unspent Transaction Output. Currently, only P2PKH outputs are supported.
+
+ ///////////////////////////////////////////////////
+
+e9a93f72f9e959cb571fc5714069a9328951668d8ef7a82813cce431266edcbd
+
+LMfeREw8bSGzgxcurhtAsRVPA691KgeTEd
+
+///////////////////////////////////////
+
+
+75aecd9580e6fa84b2dfb50ad4fda045cc3ad5e2915c13e37ff6d24eba6344f1 
+LaBCeWzVVznonP35E6NiJrkVqvCSs745K8 

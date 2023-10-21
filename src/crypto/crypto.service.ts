@@ -4,7 +4,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import * as bitcoin from 'bitcoinjs-lib';
 import { ECPairFactory, ECPairAPI, TinySecp256k1Interface } from 'ecpair';
-import CryptoAccount from 'send-crypto';
 import { Network } from 'ecpair/src/networks';
 import * as litecore from 'bitcore-lib-ltc';
 import axios from 'axios';
@@ -49,28 +48,35 @@ export class CryptoService {
       method: 'get',
       maxBodyLength: Infinity,
       // url: `https://ltcbook.nownodes.io/api/v2/utxo/LhyLNfBkoKshT7R8Pce6vkB9T2cP2o84hx`,
-      url: `https://ltcbook.nownodes.io/api/v2/utxo/LaMT348PWRnrqeeWArpwQPbuanpXDZGEUz`,
+      url: `https://ltcbook.nownodes.io/api/v2/utxo/${address}`,
       headers: {
         'api-key': '80fc45eb-808f-4445-b688-e084b99dc08b',
       },
     });
-    console.log(data);
+
+    // console.log(data);
     let utxo = data.pop();
     console.log('**** data', utxo);
     utxo.address = address.toString();
     utxo.script = new litecore.Script(address).toHex();
-    utxo.satoshis = parseInt(utxo.value);
-    console.log(utxo);
+    // utxo.satoshis = parseInt(utxo.value);
+    utxo.amount = parseInt(utxo.value);
+    // console.log(utxo);
 
     const unspentOutput = await new litecore.Transaction.UnspentOutput(utxo);
     console.log(unspentOutput);
 
     const transaction = await new litecore.Transaction()
       .from(unspentOutput) // Feed information about what unspent outputs one can use
-      .to(address, 5) // Add an output with the given amount of satoshis
+      .to([{ address: toAddress, satoshis: 5632900 }]) // Add an output with the given amount of satoshis
       .change(toAddress) // Sets up a change address where the rest of the funds will go
+      .fee(15000)
       .sign(privateKey);
 
-    console.log(transaction, 'transaction    ******');
+    console.log({ transaction });
+    const serializedTransaction = transaction.serialize();
+
+    console.log(serializedTransaction, 'transaction    ******');
+    litecore.sendRawTransaction();
   }
 }
