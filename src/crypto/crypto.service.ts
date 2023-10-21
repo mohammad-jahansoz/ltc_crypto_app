@@ -41,32 +41,36 @@ export class CryptoService {
     console.log(address, 'address');
   }
 
-  async sendLtc({ privateKey, toAddress, amount }) {
-    // const test = ECPair.fromWIF(
-    //   '341c1e644074b9c9f7ad37828ced4f9224729a0133a39e7a3647bb4e6fc7c03b',
-    //   LITECOIN,
-    // );
-
-    var privateKey = new litecore.PrivateKey(privateKey);
-    var address = privateKey.toAddress();
+  async sendLtc({ privateKeyWIF, toAddress, amount }) {
+    const privateKey = new litecore.PrivateKey(privateKeyWIF);
+    const address = privateKey.toAddress();
 
     const { data } = await axios({
       method: 'get',
       maxBodyLength: Infinity,
-      url: `https://ltcbook.nownodes.io/api/v2/utxo/${address}`,
+      // url: `https://ltcbook.nownodes.io/api/v2/utxo/LhyLNfBkoKshT7R8Pce6vkB9T2cP2o84hx`,
+      url: `https://ltcbook.nownodes.io/api/v2/utxo/LaMT348PWRnrqeeWArpwQPbuanpXDZGEUz`,
       headers: {
         'api-key': '80fc45eb-808f-4445-b688-e084b99dc08b',
       },
     });
-    console.log('**** data', data);
-    // const utxo = await new litecore.Transaction.UnspentOutput(data);
+    console.log(data);
+    let utxo = data.pop();
+    console.log('**** data', utxo);
+    utxo.address = address.toString();
+    utxo.script = new litecore.Script(address).toHex();
+    utxo.satoshis = parseInt(utxo.value);
+    console.log(utxo);
 
-    var transaction = await new litecore.Transaction()
-      .from(data) // Feed information about what unspent outputs one can use
-      .to(toAddress, 5) // Add an output with the given amount of satoshis
-      .change(address) // Sets up a change address where the rest of the funds will go
+    const unspentOutput = await new litecore.Transaction.UnspentOutput(utxo);
+    console.log(unspentOutput);
+
+    const transaction = await new litecore.Transaction()
+      .from(unspentOutput) // Feed information about what unspent outputs one can use
+      .to(address, 5) // Add an output with the given amount of satoshis
+      .change(toAddress) // Sets up a change address where the rest of the funds will go
       .sign(privateKey);
 
-    console.log(transaction);
+    console.log(transaction, 'transaction    ******');
   }
 }
