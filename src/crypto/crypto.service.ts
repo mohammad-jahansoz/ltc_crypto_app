@@ -47,36 +47,42 @@ export class CryptoService {
     const { data } = await axios({
       method: 'get',
       maxBodyLength: Infinity,
-      // url: `https://ltcbook.nownodes.io/api/v2/utxo/LhyLNfBkoKshT7R8Pce6vkB9T2cP2o84hx`,
       url: `https://ltcbook.nownodes.io/api/v2/utxo/${address}`,
       headers: {
         'api-key': '80fc45eb-808f-4445-b688-e084b99dc08b',
       },
     });
 
-    // console.log(data);
     let utxo = data.pop();
-    console.log('**** data', utxo);
     utxo.address = address.toString();
     utxo.script = new litecore.Script(address).toHex();
-    // utxo.satoshis = parseInt(utxo.value);
-    utxo.amount = parseInt(utxo.value);
-    // console.log(utxo);
+    utxo.satoshis = parseInt(utxo.value); // smallest unit
+    // utxo.amount = parseInt(utxo.value); // bigest unit
 
-    const unspentOutput = await new litecore.Transaction.UnspentOutput(utxo);
-    console.log(unspentOutput);
+    // const unspentOutput = await new litecore.Transaction.UnspentOutput(utxo);
 
     const transaction = await new litecore.Transaction()
-      .from(unspentOutput) // Feed information about what unspent outputs one can use
-      .to([{ address: toAddress, satoshis: 5632900 }]) // Add an output with the given amount of satoshis
-      .change(toAddress) // Sets up a change address where the rest of the funds will go
-      .fee(15000)
+      .from(utxo) // Feed information about what unspent outputs one can use
+      .to([{ address: toAddress, satoshis: amount }]) // work with smallest unit
+      // .to(toAddress, 5) // work with biggest price
+      .change(toAddress) // Sets up a change address where the rest of the coins
+      .fee(1580) // get smallest unit
       .sign(privateKey);
 
-    console.log({ transaction });
-    const serializedTransaction = transaction.serialize();
+    const serializedTransaction = await transaction.serialize();
 
-    console.log(serializedTransaction, 'transaction    ******');
-    litecore.sendRawTransaction();
+    try {
+      const result = await axios({
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: `https://ltcbook.nownodes.io/api/v2/sendtx/${serializedTransaction}`,
+        headers: {
+          'api-key': '80fc45eb-808f-4445-b688-e084b99dc08b',
+        },
+      });
+      console.log({ result: result.data });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
