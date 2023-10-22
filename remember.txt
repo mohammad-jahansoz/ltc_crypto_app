@@ -1,0 +1,49 @@
+
+PRIVATE
+2ecf21d15c432600019afcea973d327c931d21773751caa14b37dfb74e264cdf
+PUBLIC
+LKeQRqJE26YDx3w376RGe6nmaSCJaz7jpu
+
+
+
+PRIVATE
+ e7cd214423c3d71152f0d21f983c2ffbb664a3da88c200aaa066ccdffba1fb61
+PUBLIC 
+Lh1TPGCPGrqHDnhffNCsFvNtr1UpS7BEBr
+
+
+
+<Buffer a8 17 36 86 e5 85 e4 5f 9b e1 8a b3 53 e9 d3 9c ac a6 6f df eb 94 ad 23 e5 98 1d 26 6b 26 19 27> PRIVATE
+<Buffer 03 ab 86 7b e6 ba 98 20 de 65 ac 5f 33 53 28 97 a3 5f 7f d0 8c 6c 7f be a7 4b 08 a4 a5 54 8b 94 79> PUBLIC
+LZcbexZK1wQh7Rup45XqpdnLLyeGrfstpG
+
+
+341c1e644074b9c9f7ad37828ced4f9224729a0133a39e7a3647bb4e6fc7c03b converteeeed
+LiPKcAxnwtnEDAHN7skNoLJefdnSZQHzoy address
+
+
+
+https://account.nownodes.io/profile/dashboard
+https://nownodes.io/nodes
+https://documenter.getpostman.com/view/13630829/TVmFkLwy#af1f765a-406f-4d1b-99c1-e62b11a52eb1
+
+https://www.npmjs.com/package/bitcore-lib-ltc
+https://github.com/litecore-archive/litecore-lib/blob/master/docs/examples.md
+
+
+
+
+Note also that an output can be used only once. That's why there's a concept of "change address" in the litecoin ecosystem: if an output of 10 BTC is available for me to spend, but I only need to transmit 1 BTC, I'll create a transaction with two outputs, one with 1 BTC that I want to spend, and the other with 9 BTC to a change address, so I can spend this 9 BTC with another private key that I own.
+from(utxo): add an input from an Unspent Transaction Output. Currently, only P2PKH outputs are supported.
+
+ ///////////////////////////////////////////////////
+
+e9a93f72f9e959cb571fc5714069a9328951668d8ef7a82813cce431266edcbd
+
+LMfeREw8bSGzgxcurhtAsRVPA691KgeTEd
+
+///////////////////////////////////////
+
+
+75aecd9580e6fa84b2dfb50ad4fda045cc3ad5e2915c13e37ff6d24eba6344f1 
+LaBCeWzVVznonP35E6NiJrkVqvCSs745K8 
